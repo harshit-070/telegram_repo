@@ -90,6 +90,7 @@ bot.onText(/\/start/, async (msg: Message) => {
   message += "/audio {text} convert audio file in the desired text\n";
   message += "/help to get the keyword \n";
   message += "/chat to get suggestion from chatpi \n";
+  message += `Note : Courses and jobs will be shown from dsep protocol \n`;
   bot.sendMessage(chatId, message);
 });
 
@@ -104,6 +105,7 @@ bot.onText(/\/help/, async (msg: Message) => {
   message += "/audio {text} convert audio file in the desired text\n";
   message += "/help to get the keyword\n";
   message += "/chat to get suggestion from chatpi \n";
+  message += `Note : Courses and jobs will be shown from dsep protocol \n`;
   bot.sendMessage(chatId, await translateMessage(chatId, message));
 });
 
