@@ -88,7 +88,8 @@ bot.onText(/\/start/, async (msg: Message) => {
   message +=
     "/language {keyword} change the language of the search results including audio file\n";
   message += "/audio {text} convert audio file in the desired text\n";
-  message += "/help to get the keyword";
+  message += "/help to get the keyword \n";
+  message += "/chat to get suggestion from chatpi \n";
   bot.sendMessage(chatId, message);
 });
 
@@ -102,6 +103,7 @@ bot.onText(/\/help/, async (msg: Message) => {
     "/language {keyword} change the language of the search results including audio file\n";
   message += "/audio {text} convert audio file in the desired text\n";
   message += "/help to get the keyword\n";
+  message += "/chat to get suggestion from chatpi \n";
   bot.sendMessage(chatId, await translateMessage(chatId, message));
 });
 
@@ -262,6 +264,25 @@ bot.onText(/\/audio/, async (msg: Message) => {
   } catch (error) {
     // console.log(error);
     return `Error, Could Not translate \n ${message}`;
+  }
+});
+
+bot.onText(/\/chat/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  const message = msg.text?.replace("/chat ", "").replace("/chat", "");
+
+  try {
+    const result = await axios.post(`${model_api}/chat`, { text: message });
+    return bot.sendMessage(
+      chatId,
+      await translateMessage(chatId, result.data.answer)
+    );
+  } catch (error) {
+    console.log(error);
+    return bot.sendMessage(
+      chatId,
+      "Internal Error. Please try again after some time"
+    );
   }
 });
 
