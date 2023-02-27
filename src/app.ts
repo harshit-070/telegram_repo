@@ -36,68 +36,7 @@ const token = process.env.TELEGRAM_BOT_ID as string;
 const bot = new TelegramBot(token, { polling: true });
 
 console.log("Telegram Bot Started");
-// bot.onText(/\/course/, (msg) => {
-//   console.log(msg);
-//   bot.sendMessage(msg.chat.id, "/course Course Recieved");
-// });
 
-// bot.onText(/\/instructor/, async (msg) => {});
-
-// bot.on("voice", async (msg: Message) => {
-//   const chatId = msg.chat.id;
-//   if (msg.voice) {
-//     const voiceId = msg.voice.file_id;
-
-//     bot.getFileLink(voiceId).then(async (link) => {
-//       // handle the audio file link
-//       let tragetLang = await getRedisKey(chatId.toString());
-//       if (!tragetLang) {
-//         tragetLang = "en";
-//       }
-//       try {
-//         const response = await axios.post(`${model_api}/audio_text`, {
-//           url: link,
-//           target_lang: tragetLang,
-//           chatId: chatId.toString(),
-//         });
-//         console.log(response);
-//       } catch (error) {}
-//       bot.sendMessage(chatId, "Thanks for the audio file!");
-//     });
-//   }
-// });
-
-// bot.on("message", async (message: Message) => {
-//   if (message.audio) {
-//     // The message contains an audio file
-//     const file_id = message.audio.file_id;
-//     const chatId = message.chat.id;
-//     // You can retrieve the file using getFileLink method
-//     bot
-//       .getFileLink(file_id)
-//       .then(async (link) => {
-//         try {
-//           console.log(link);
-//           let tragetLang = await getRedisKey(chatId.toString());
-//           if (!tragetLang) {
-//             tragetLang = "en";
-//           }
-//           const response = await axios.post(`${model_api}/audio_text`, {
-//             url: link,
-//             target_lang: tragetLang,
-//             chatId: chatId.toString(),
-//           });
-//           console.log(response);
-//         } catch (error) {
-//           console.log(error);
-//         }
-//         bot.sendMessage(chatId, "Thanks for the audio file!");
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   }
-// });
 const model_api = process.env.BACKEND_MODE_API;
 
 const translateMessage = async (chatId: number, message: string) => {
@@ -114,6 +53,28 @@ const translateMessage = async (chatId: number, message: string) => {
   }
   return message;
 };
+
+bot.onText(/\/start/, async (msg: Message) => {
+  let message = "";
+  message += "/search {keyword} to the courses and job on open network \n";
+  message += "/course {keyword} the courses on open network \n";
+  message += "/job {keyword} the job on open network \n";
+  message +=
+    "/language {keyword} change the language of the search results including audio file";
+  message += "/audio {text} convert audio file in the desired text";
+  message += "/help to get the keyword";
+});
+
+bot.onText(/\/help/, async (msg: Message) => {
+  let message = "";
+  message += "/search {keyword} to the courses and job on open network \n";
+  message += "/course {keyword} the courses on open network \n";
+  message += "/job {keyword} the job on open network \n";
+  message +=
+    "/language {keyword} change the language of the search results including audio file";
+  message += "/audio {text} convert audio file in the desired text";
+  message += "/help to get the keyword";
+});
 
 bot.onText(/\/search/, async (msg: Message) => {
   const chatId = msg.chat.id;
