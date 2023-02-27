@@ -1,0 +1,195 @@
+{
+    "context": {
+        "domain": "dsep:jobs",
+        "version": "1.0.0",
+        "action": "status",
+        "bap_id": "dsep-protocol.becknprotocol.io",
+        "bap_uri": "https://dsep-protocol-network.becknprotocol.io/",
+        "bpp_id": "affinidi.com.bpp",
+        "bpp_uri": "https://6vs8xnx5i7.execute-api.ap-south-1.amazonaws.com/dsep",
+        "transaction_id": "a9aaecca-10b7-4d19-b640-b047a7c60008",
+        "message_id": "b2b36d9a-9340-4b2a-a77c-23e4cbb628e8",
+        "ttl": "PT10M",
+        "timestamp": "2023-02-16T15:29:21.608Z"
+    },
+    "responses": [
+        {
+            "context": {
+                "domain": "dsep:jobs",
+                "location": {
+                    "country": {
+                        "name": "India",
+                        "code": "IND"
+                    }
+                },
+                "action": "on_status",
+                "version": "1.0.0",
+                "bap_id": "dsep-protocol.becknprotocol.io",
+                "bap_uri": "https://dsep-protocol-network.becknprotocol.io/",
+                "bpp_id": "affinidi.com.bpp",
+                "bpp_uri": "https://6vs8xnx5i7.execute-api.ap-south-1.amazonaws.com/dsep",
+                "transaction_id": "a9aaecca-10b7-4d19-b640-b047a7c60008",
+                "message_id": "b2b36d9a-9340-4b2a-a77c-23e4cbb628e8",
+                "timestamp": "2023-02-16T15:29:21.7767097+00:00",
+                "ttl": "P1M"
+            },
+            "message": {
+                "order": {
+                    "id": "1676561329934",
+                    "provider": {
+                        "id": "1",
+                        "descriptor": {
+                            "name": "Affinidi"
+                        },
+                        "locations": [
+                            {
+                                "id": "1",
+                                "city": {
+                                    "name": "Bangalore"
+                                }
+                            }
+                        ]
+                    },
+                    "items": [
+                        {
+                            "id": "8A690F158A37965A2CC0E69EC8B360B2",
+                            "descriptor": {
+                                "name": "Test manager",
+                                "long_desc": "We’re on a search for a Staff Mobile Developer with the following attributes: Critical Thinking- You are able to skillfully conceptualise, apply, analyse and evaluate information gathered from observation, experience or communication and use it as a guide to action Data-Driven attitude — You often propose solutions or make a point in a logical and objective manner, substantiated with accurate data and evidence Dealing with Ambiguity — You can effectively cope with change and uncertainty, and are comfortable when things are up in the air Goal-oriented — You are driven and can be counted on to exceed goals. You steadfastly push yourself and others to achieve results all the time Problem Solving — You can easily identify and solve complex problems in a methodological manner "
+                            },
+                            "fulfillment_ids": [],
+                            "location_ids": [],
+                            "xinput": {
+                                "form": {
+                                    "url": ""
+                                }
+                            },
+                            "tags": [
+                                {
+                                    "descriptor": {
+                                        "name": "Minimum Educational Qualifications"
+                                    },
+                                    "display": true
+                                },
+                                {
+                                    "descriptor": {
+                                        "name": "Preferred Educational Qualifications"
+                                    },
+                                    "display": true
+                                },
+                                {
+                                    "descriptor": {
+                                        "name": "Work Experience"
+                                    },
+                                    "display": true
+                                },
+                                {
+                                    "descriptor": {
+                                        "name": "Responsibilities"
+                                    },
+                                    "list": [
+                                        {
+                                            "value": "Contribute to process improvements and build a high-performance engineering culture "
+                                        }
+                                    ],
+                                    "display": true
+                                },
+                                {
+                                    "descriptor": {
+                                        "name": "Employment Information",
+                                        "code": "employment-info"
+                                    },
+                                    "display": true
+                                },
+                                {
+                                    "descriptor": {
+                                        "name": "skill requirement",
+                                        "code": "Skills"
+                                    },
+                                    "display": true
+                                },
+                                {
+                                    "descriptor": {
+                                        "name": "Salary Compensation",
+                                        "code": "salary-info"
+                                    },
+                                    "list": [
+                                        {
+                                            "descriptor": {
+                                                "name": "overtime"
+                                            },
+                                            "value": "8"
+                                        }
+                                    ],
+                                    "display": true
+                                }
+                            ]
+                        }
+                    ],
+                    "fulfillments": [
+                        {
+                            "id": "",
+                            "state": {
+                                "descriptor": {
+                                    "name": "Application Accepted",
+                                    "code": "application-accepted"
+                                }
+                            },
+                            "customer": {},
+                            "tracking": false
+                        },
+                        {
+                            "id": "1",
+                            "state": {
+                                "descriptor": {
+                                    "name": "Screening",
+                                    "code": "Screening"
+                                }
+                            },
+                            "customer": {
+                                "person": {
+                                    "name": "John Doe",
+                                    "creds": [
+                                        {
+                                            "type": "application/vc+json",
+                                            "url": "https://cbse.nic.in/link/to/college-marksheet.json"
+                                        },
+                                        {
+                                            "type": "application/vc+json",
+                                            "url": "https://drive.google.com/link/to/pass-certificate.json"
+                                        },
+                                        {
+                                            "type": "application/vc+json",
+                                            "url": "https://digilocker.com/link/to/python-skill-certificate.json"
+                                        },
+                                        {
+                                            "type": "application/pdf",
+                                            "url": "https://drive.google.com/link/to/python-skill-certificate.pdf"
+                                        },
+                                        {
+                                            "type": "application/pdf",
+                                            "url": "https://drive.google.com/link/to/experience-certificate.pdf"
+                                        }
+                                    ],
+                                    "tags": [
+                                        {
+                                            "display": true,
+                                            "list": [
+                                                {},
+                                                {},
+                                                {},
+                                                {}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            "tracking": false
+                        }
+                    ],
+                    "type": "DEFAULT"
+                }
+            }
+        }
+    ]
+}
