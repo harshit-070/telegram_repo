@@ -43,15 +43,60 @@ console.log("Telegram Bot Started");
 
 // bot.onText(/\/instructor/, async (msg) => {});
 
-// bot.on("voice", (msg) => {
+// bot.on("voice", async (msg: Message) => {
 //   const chatId = msg.chat.id;
-//   const voiceId = msg.voice.file_id;
+//   if (msg.voice) {
+//     const voiceId = msg.voice.file_id;
 
-//   bot.getFileLink(voiceId).then((link) => {
-//     // handle the audio file link
-//     console.log(link);
-//     bot.sendMessage(chatId, "Thanks for the audio file!");
-//   });
+//     bot.getFileLink(voiceId).then(async (link) => {
+//       // handle the audio file link
+//       let tragetLang = await getRedisKey(chatId.toString());
+//       if (!tragetLang) {
+//         tragetLang = "en";
+//       }
+//       try {
+//         const response = await axios.post(`${model_api}/audio_text`, {
+//           url: link,
+//           target_lang: tragetLang,
+//           chatId: chatId.toString(),
+//         });
+//         console.log(response);
+//       } catch (error) {}
+//       bot.sendMessage(chatId, "Thanks for the audio file!");
+//     });
+//   }
+// });
+
+// bot.on("message", async (message: Message) => {
+//   if (message.audio) {
+//     // The message contains an audio file
+//     const file_id = message.audio.file_id;
+//     const chatId = message.chat.id;
+//     // You can retrieve the file using getFileLink method
+//     bot
+//       .getFileLink(file_id)
+//       .then(async (link) => {
+//         try {
+//           console.log(link);
+//           let tragetLang = await getRedisKey(chatId.toString());
+//           if (!tragetLang) {
+//             tragetLang = "en";
+//           }
+//           const response = await axios.post(`${model_api}/audio_text`, {
+//             url: link,
+//             target_lang: tragetLang,
+//             chatId: chatId.toString(),
+//           });
+//           console.log(response);
+//         } catch (error) {
+//           console.log(error);
+//         }
+//         bot.sendMessage(chatId, "Thanks for the audio file!");
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   }
 // });
 const model_api = process.env.BACKEND_MODE_API;
 
