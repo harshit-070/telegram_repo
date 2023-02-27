@@ -54,26 +54,55 @@ const translateMessage = async (chatId: number, message: string) => {
   return message;
 };
 
+bot.on("message", async (msg: Message) => {
+  console.log("Hello");
+  console.log(msg);
+  if (msg.document?.file_name?.includes(".mp4")) {
+    console.log("Hi");
+    const fileId = msg.document?.file_id;
+    const chatId = msg.chat.id;
+    // Download the video from Telegram
+    let tragetLang = await getRedisKey(chatId.toString());
+    if (!tragetLang) {
+      tragetLang = "en";
+    }
+    console.log("hi");
+    bot.getFileLink(fileId).then(async (fileLink) => {
+      console.log(fileLink);
+      const result = await axios.post(`${model_api}/video`, {
+        chatId,
+        url: fileLink,
+        target_lang: tragetLang,
+      });
+      console.log(result);
+    });
+  }
+});
+
 bot.onText(/\/start/, async (msg: Message) => {
   let message = "";
+  const chatId = msg.chat.id;
   message += "/search {keyword} to the courses and job on open network \n";
   message += "/course {keyword} the courses on open network \n";
   message += "/job {keyword} the job on open network \n";
   message +=
-    "/language {keyword} change the language of the search results including audio file";
-  message += "/audio {text} convert audio file in the desired text";
+    "/language {keyword} change the language of the search results including audio file\n";
+  message += "/audio {text} convert audio file in the desired text\n";
   message += "/help to get the keyword";
+  bot.sendMessage(chatId, message);
 });
 
 bot.onText(/\/help/, async (msg: Message) => {
   let message = "";
+  const chatId = msg.chat.id;
   message += "/search {keyword} to the courses and job on open network \n";
   message += "/course {keyword} the courses on open network \n";
   message += "/job {keyword} the job on open network \n";
   message +=
-    "/language {keyword} change the language of the search results including audio file";
-  message += "/audio {text} convert audio file in the desired text";
-  message += "/help to get the keyword";
+    "/language {keyword} change the language of the search results including audio file\n";
+  message += "/audio {text} convert audio file in the desired text\n";
+  message += "/help to get the keyword\n";
+  bot.sendMessage(chatId, await translateMessage(chatId, message));
 });
 
 bot.onText(/\/search/, async (msg: Message) => {
