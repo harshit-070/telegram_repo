@@ -5,7 +5,9 @@ import axios from "axios";
 import { searchTrainingService } from "./TrainingAndCourses/services";
 import { searchJob } from "./JobsFlow/services";
 import { getRedisKey, setRedisKey } from "./utils/redis.utils";
-
+import https from "https";
+import fs from "fs";
+import path from "path";
 const language = [
   { value: "en", label: "english" },
   { value: "hi", label: "hindi" },
@@ -51,10 +53,10 @@ console.log("Telegram Bot Started");
 //     bot.sendMessage(chatId, "Thanks for the audio file!");
 //   });
 // });
+const model_api = process.env.BACKEND_MODE_API;
 
 const translateMessage = async (chatId: number, message: string) => {
   try {
-    const model_api = process.env.BACKEND_MODE_API;
     const tragetLang = await getRedisKey(chatId.toString());
     const data = await axios.post(`${model_api}/translate`, {
       text: message,
@@ -173,7 +175,59 @@ bot.onText(/\/language/, async (msg: Message) => {
   const code = language.find(({ label }) => {
     return label === message?.toLowerCase();
   });
-  setRedisKey(chatId.toString(), code?.label || "en");
+  setRedisKey(chatId.toString(), code?.label || message?.toLowerCase());
+});
+
+bot.onText(/\/audio/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  const message = msg.text?.replace("/audio ", "").replace("/audio", "");
+  console.log(message);
+  if (!message || message == "") {
+    return bot.sendMessage(
+      chatId,
+      await translateMessage(chatId, "Please give message to translate")
+    );
+  }
+  try {
+    let tragetLang = await getRedisKey(chatId.toString());
+    if (!tragetLang) {
+      tragetLang = "en";
+    }
+    const output_path = path.join(
+      __dirname,
+      "./audio",
+      `${chatId.toString()}.mp3`
+    );
+    bot.sendMessage(
+      chatId,
+      await translateMessage(chatId, "Please wait tranlation in progress")
+    );
+    console.log(message, tragetLang);
+    axios
+      .post(
+        `${model_api}/audio`,
+        {
+          text: message,
+          target_lang: tragetLang,
+        },
+        { responseType: "stream" }
+      )
+      .then((response) => {
+        const audioFile = fs.createWriteStream(output_path);
+        response.data.pipe(audioFile);
+        audioFile.on("finish", () => {
+          return bot.sendAudio(chatId, output_path);
+        });
+      })
+      .catch((error) => {
+        console.log("error :", error);
+      });
+    console.log("got response");
+    // bot.sendAudio(chatId, output_path);
+  } catch (error) {
+    // console.log(error);
+    return `Error, Could Not translate \n ${message}`;
+  }
 });
 
 const sendCourseData = async (chatId: any, response: any) => {
