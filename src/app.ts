@@ -1,13 +1,10 @@
 import TelegramBot, { Message } from "node-telegram-bot-api";
-import fs from "fs";
-import speech from "@google-cloud/speech";
 import * as dotenv from "dotenv";
 dotenv.config();
-
+import axios from "axios";
 import { searchTrainingService } from "./TrainingAndCourses/services";
 import { searchJob } from "./JobsFlow/services";
-import { setRedisKey } from "./utils/redis.utils";
-const client = new speech.SpeechClient();
+import { getRedisKey, setRedisKey } from "./utils/redis.utils";
 
 const language = [
   { value: "en", label: "english" },
@@ -56,6 +53,18 @@ console.log("Telegram Bot Started");
 // });
 
 const translateMessage = async (chatId: number, message: string) => {
+  try {
+    const model_api = process.env.BACKEND_MODE_API;
+    const tragetLang = await getRedisKey(chatId.toString());
+    const data = await axios.post(`${model_api}/translate`, {
+      text: message,
+      target_langs: tragetLang,
+    });
+    return data.data.translate_text;
+  } catch (error) {
+    console.log(error);
+    return `Error, Could Not translate \n ${message}`;
+  }
   return message;
 };
 
@@ -92,13 +101,12 @@ bot.onText(/\/course/, async (msg: Message) => {
   const chatId = msg.chat.id;
   try {
     const message = msg.text?.replace("/course ", "").replace("/course", "");
-    bot.sendMessage(
+    console.log(message);
+    let send_message = await translateMessage(
       chatId,
-      await translateMessage(
-        chatId,
-        `Searching courses related to ${message} on open network.....`
-      )
+      `Searching courses related to ${message} on open network.....`
     );
+    bot.sendMessage(chatId, send_message);
 
     const response = await Promise.all([
       searchTrainingService({ searchTitle: message }),
