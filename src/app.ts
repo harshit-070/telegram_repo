@@ -41,10 +41,13 @@ const model_api = process.env.BACKEND_MODE_API;
 
 const translateMessage = async (chatId: number, message: string) => {
   try {
-    const tragetLang = await getRedisKey(chatId.toString());
+    let targetLang = await getRedisKey(chatId.toString());
+    if (!targetLang) {
+      targetLang = "en";
+    }
     const data = await axios.post(`${model_api}/translate`, {
       text: message,
-      target_langs: tragetLang,
+      target_langs: targetLang,
     });
     return data.data.translate_text;
   } catch (error) {
@@ -77,6 +80,23 @@ bot.on("message", async (msg: Message) => {
       console.log(result);
     });
   }
+  if (msg.audio) {
+    console.log("Hi");
+    const fileId = msg.audio.file_id;
+    const chatId = msg.chat.id;
+    let tragetLang = await getRedisKey(chatId.toString());
+    if (!tragetLang) {
+      tragetLang = "en";
+    }
+    bot.getFileLink(fileId).then(async (fileLink) => {
+      const result = await axios.post(`${model_api}/audio_conversion`, {
+        chatId,
+        url: fileLink,
+        target_lang: tragetLang,
+      });
+      console.log(result);
+    });
+  }
 });
 
 bot.onText(/\/start/, async (msg: Message) => {
@@ -87,9 +107,10 @@ bot.onText(/\/start/, async (msg: Message) => {
   message += "/job {keyword} the job on open network \n";
   message +=
     "/language {keyword} change the language of the search results including audio file\n";
+  message += "/translate {text} convert text to the selected language\n";
   message += "/audio {text} convert audio file in the desired text\n";
   message += "/help to get the keyword \n";
-  message += "/chat to get suggestion from chatpi \n";
+  message += "/chat to get suggestion from chatGPT \n";
   message += `Note : Courses and jobs will be shown from dsep protocol \n`;
   bot.sendMessage(chatId, message);
 });
@@ -103,8 +124,9 @@ bot.onText(/\/help/, async (msg: Message) => {
   message +=
     "/language {keyword} change the language of the search results including audio file\n";
   message += "/audio {text} convert audio file in the desired text\n";
+  message += "/translate {text} convert text to the selected language\n";
   message += "/help to get the keyword\n";
-  message += "/chat to get suggestion from chatpi \n";
+  message += "/chat to get suggestion from chatGPT \n";
   message += `Note : Courses and jobs will be shown from dsep protocol \n`;
   bot.sendMessage(chatId, await translateMessage(chatId, message));
 });
@@ -279,6 +301,24 @@ bot.onText(/\/chat/, async (msg: Message) => {
       chatId,
       await translateMessage(chatId, result.data.answer)
     );
+  } catch (error) {
+    console.log(error);
+    return bot.sendMessage(
+      chatId,
+      "Internal Error. Please try again after some time"
+    );
+  }
+});
+
+bot.onText(/\/translate/, async (msg: Message) => {
+  const chatId = msg.chat.id;
+  const message = msg.text
+    ?.replace("/translate ", "")
+    .replace("/translate", "") as string;
+
+  try {
+    console.log("Hi");
+    return bot.sendMessage(chatId, await translateMessage(chatId, message));
   } catch (error) {
     console.log(error);
     return bot.sendMessage(
